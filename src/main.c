@@ -70,11 +70,41 @@ void tile_windows() {
     }
 }
 
+void handle_events() {
+    XEvent e;
+
+    while (running) {
+        XNextEvent(dpy, &e);
+        switch (e.type) {
+            case KeyPress:
+                if (XKeycodeToKeysym(dpy, e.xkey.keycode, 0) == XK_q) {
+                    printf("alt + q pressed, exiting..\n");
+                    running = 0;
+                }
+                break;
+
+            case MapRequest:
+                printf("maprequest event\n");
+                add_window(e.xmaprequest.window);
+                tile_windows();
+                break;
+
+            case DestroyNotify:
+                printf("destroynotify event\n");
+                remove_window(e.xdestroywindow.window);
+                tile_windows();
+                break;
+        }
+    }
+}
+
 
 
 int main() {
     setup();
-    printf("ready to handle windows\n");
+    printf("entering event loop (alt + q to quit)\n");
+    handle_events();
+    printf("shutting down..\n");
     XCloseDisplay(dpy);
     return 0;
 }
