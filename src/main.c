@@ -42,7 +42,7 @@ void add_window(Window w) {
 
 void remove_window(Window w) {
     for (int i = 0; i < window_count; i++) {
-        if (windows[1] == w) {
+        if (windows[i] == w) {
             for (int j = i; j < window_count -1; j++) {
                 windows[j] = windows[j + 1];
             }
